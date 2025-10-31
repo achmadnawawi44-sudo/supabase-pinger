@@ -7,25 +7,31 @@
 </head>
 <body>
   <h1>Supabase Auto Ping</h1>
-  <p>Halaman ini hanya untuk uji coba manual ping.</p>
+  <p>Halaman ini mengirim request ke Supabase endpoints untuk menjaga agar tetap aktif.</p>
+  <pre id="log"></pre>
+
   <script>
     const urls = [
-      "https://plrfinzrxysakgrsjcvg.supabase.co",
-      "https://ytacwxsvfdqtvjbbjjnl.supabase.co"
+      "https://plrfinzrxysakgrsjcvg.supabase.co/rest/v1/",
+      "https://ytacwxsvfdqtvjbbjjnl.supabase.co/rest/v1/"
     ];
+
+    const log = document.getElementById("log");
 
     async function pingAll() {
       for (const url of urls) {
         try {
-          const res = await fetch(url);
-          console.log(`Ping ${url} status:`, res.status);
+          const res = await fetch(url, { method: "GET", mode: "no-cors" });
+          log.textContent += `✅ Ping ${url} berhasil (mungkin tanpa response karena no-cors)\n`;
         } catch (err) {
-          console.error(`Gagal ping ${url}:`, err);
+          log.textContent += `❌ Gagal ping ${url}: ${err}\n`;
         }
       }
     }
 
     pingAll();
+    // Auto ping setiap 5 menit
+    setInterval(pingAll, 5 * 60 * 1000);
   </script>
 </body>
 </html>
